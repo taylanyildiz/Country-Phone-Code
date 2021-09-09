@@ -13,6 +13,7 @@ class CountryPhoneTextField extends StatefulWidget {
     this.focusNode,
     this.exclude,
     this.hintText,
+    this.countryListTheme,
     Color? fillColor,
     Color? iconColor,
     Color? prefixColor,
@@ -87,6 +88,10 @@ class CountryPhoneTextField extends StatefulWidget {
   /// Style of country phone code
   final TextStyle codeStyle;
 
+  /// countryListTheme: Can be used to customize the country
+  /// list's bottom sheet and widgets that lie within it. (optional).
+  final CountryListThemeData? countryListTheme;
+
   /// Horizontal padding [double]
   final double padding;
 
@@ -130,6 +135,7 @@ class _CountryPhoneTextFieldState extends State<CountryPhoneTextField> {
         setState(() {});
       },
       showPhoneCode: true,
+      countryListTheme: widget.countryListTheme,
     );
   }
 

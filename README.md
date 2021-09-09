@@ -93,6 +93,10 @@ CountryPhoneTextField(
 ### Style of country phone code
 - TextStyle codeStyle;
 
+### countryListTheme: Can be used to customize the country 
+### list's bottom sheet and widgets that lie within it. (optional).
+- final CountryListThemeData? countryListTheme;
+
 ### Horizontal padding
 - double padding;
 
