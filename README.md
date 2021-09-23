@@ -1,7 +1,7 @@
 # select_country_code_phone
 
 
-<img src = "https://user-images.githubusercontent.com/37551474/132737505-532ee6f7-564f-4a06-a099-27ee1de0a3c4.gif" width="200">
+<img src = "https://user-images.githubusercontent.com/37551474/134466781-1cd8beba-1502-4446-a737-c7d4e7f50a6c.gif" width="200">
 
 
 
@@ -28,7 +28,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 ```dart
 return const MaterialApp(
-  title: 'Localizations Sample App',
+ title: 'Flutter Country Phone Code Input',
  supportedLocales: [
     const Locale('en'),
     const Locale('el'),
@@ -62,19 +62,19 @@ CountryPhoneTextField(
 # Usage 
 
 
-### Phone input controller [TextEditingController]
-- textController
+### Phone input controller
+- TextEditingController textController
 
 ### input validator for error
 - Function(String?)? validator;
 
 ### return select country
-- Function(Country? country)? onCountry;
+- Function(String? country)? phoneCode;
 
 ### Focusnode for request
 - FocusNode? focusNode;
 
-### Country is like 'TR' for TURKEY.
+### Country is like ['TR'] for TURKEY.
 - initialCountryCode;
 
 ### Exclude: Can be used to exclude(remove) one or more country

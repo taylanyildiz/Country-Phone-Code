@@ -9,7 +9,7 @@ class CountryPhoneTextField extends StatefulWidget {
     this.textController,
     this.onChange,
     this.validator,
-    this.onCountry,
+    this.phoneCode,
     this.focusNode,
     this.exclude,
     this.hintText,
@@ -32,7 +32,7 @@ class CountryPhoneTextField extends StatefulWidget {
         maxLength = maxLength ?? 20,
         iconColor = iconColor ?? Colors.black,
         prefixColor = prefixColor ?? Colors.grey,
-        flagSize = flagSize ?? 22.0,
+        flagSize = flagSize ?? 20.0,
         iconSize = iconSize ?? 25.0,
         codeStyle = codeStyle ??
             TextStyle(
@@ -43,8 +43,7 @@ class CountryPhoneTextField extends StatefulWidget {
         style = style ??
             TextStyle(
               color: Colors.black,
-              fontSize: 22.0,
-              fontWeight: FontWeight.w500,
+              fontSize: 18.0,
             ),
         super(key: key);
 
@@ -58,7 +57,7 @@ class CountryPhoneTextField extends StatefulWidget {
   final String? Function(String?)? validator;
 
   /// return select country
-  final Function(Country? country)? onCountry;
+  final Function(String phoneCode)? phoneCode;
 
   /// Focusnode for request
   final FocusNode? focusNode;
@@ -121,7 +120,11 @@ class _CountryPhoneTextFieldState extends State<CountryPhoneTextField> {
         (element) => element.countryCode == widget.initialCountryCode);
     if (index != -1) {
       _initalCountry = _countryList[index];
+      if (widget.phoneCode != null) {
+        widget.phoneCode!.call(_initalCountry.phoneCode);
+      }
     }
+
     super.initState();
   }
 
@@ -131,7 +134,7 @@ class _CountryPhoneTextFieldState extends State<CountryPhoneTextField> {
       exclude: widget.exclude,
       onSelect: (country) {
         _initalCountry = country;
-        widget.onCountry?.call(country);
+        widget.phoneCode?.call(country.phoneCode);
         setState(() {});
       },
       showPhoneCode: true,
@@ -141,51 +144,25 @@ class _CountryPhoneTextFieldState extends State<CountryPhoneTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: widget.padding),
-      padding: EdgeInsets.only(left: 10.0),
-      width: width,
-      decoration: BoxDecoration(
-        color: widget.fillColor,
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          selectCountry(context),
-          divider,
-          showCountryPhoneCode,
-          textField,
-        ],
-      ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: widget.padding),
+      child: textField(context),
     );
   }
 
-  Widget get divider => Container(
-        color: Colors.black12,
-        width: 2.0,
-        height: widget.height - widget.padding / 2,
-      );
-
-  Widget get showCountryPhoneCode => Padding(
-        padding: EdgeInsets.only(left: 5.0),
-        child: Text(
-          '(+${_initalCountry.phoneCode})',
-          style: widget.codeStyle,
-        ),
-      );
-
   Widget selectCountry(context) => GestureDetector(
         onTap: () => onSelectCountry(context),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            showCountryFlag,
-            selectCountryIcon,
-          ],
+        child: Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              showCountryFlag,
+              selectCountryIcon,
+            ],
+          ),
         ),
       );
 
@@ -197,28 +174,30 @@ class _CountryPhoneTextFieldState extends State<CountryPhoneTextField> {
   Widget get selectCountryIcon => Icon(Icons.keyboard_arrow_down,
       color: widget.iconColor, size: widget.iconSize);
 
-  Widget get textField => Expanded(
-        child: TextFormField(
-          controller: widget.textController,
-          validator: widget.validator,
-          onChanged: widget.onChange,
-          maxLength: widget.maxLength,
-          focusNode: widget.focusNode,
-          style: widget.style,
-          cursorColor: Colors.black,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: widget.fillColor,
-            hintText: widget.hintText,
-            counterText: '',
-            suffixIcon: Icon(Icons.phone, color: widget.prefixColor),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5.0),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-            focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+  Widget textField(context) => TextFormField(
+        controller: widget.textController,
+        validator: widget.validator,
+        onChanged: widget.onChange,
+        maxLength: widget.maxLength,
+        focusNode: widget.focusNode,
+        style: widget.style,
+        cursorColor: Colors.black,
+        keyboardType: TextInputType.phone,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: widget.fillColor,
+          hintText: widget.hintText,
+          counterText: '',
+          prefixStyle: TextStyle(color: Colors.black),
+          prefixIcon: selectCountry(context),
+          suffixIcon: Icon(Icons.phone, color: widget.prefixColor),
+          contentPadding: EdgeInsets.zero,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5.0),
+            borderSide: BorderSide.none,
           ),
+          enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+          focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
         ),
       );
 }
